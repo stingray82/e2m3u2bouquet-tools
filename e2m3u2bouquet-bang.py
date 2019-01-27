@@ -9,6 +9,12 @@ e2m3u2bouquet.e2m3u2bouquet -- Enigma2 IPTV m3u to bouquet parser
 @license:    GNU GENERAL PUBLIC LICENSE version 3
 @deffield    updated: Updated
 """
+''' Begining oottppxx Added Items '''
+BANG=' !!!'
+import json
+import urllib2
+import zlib
+''' End of oottppxx Added Items '''
 import time
 import sys
 import os
@@ -131,6 +137,85 @@ def uninstaller():
         print('Unable to uninstall')
         raise
     print('----Uninstall complete----')
+
+''' Begining oottppxx Added Items '''
+def getJsonURL(url):
+    request = urllib2.Request(url)
+    request.add_header('User-Agent', 'Enigma2 Suls mod @oottppxx')
+    request.add_header('Accept-Encoding', 'gzip')
+    response = urllib2.urlopen(request)
+    gzipped = response.info().get('Content-Encoding') == 'gzip'
+    data = ''
+    dec_obj = zlib.decompressobj(16+zlib.MAX_WBITS)
+    while True:
+        res_data = response.read()
+        if not res_data:
+            break
+        if gzipped:
+            data += dec_obj.decompress(res_data)
+        else:
+            data += res_data
+    return json.loads(data)
+
+def bang_catchup_names(self, dictchannels, username, password):
+        print("\n----Banging catchup names----")
+        VTS_RE=r'.*//(?P<host>[%a-zA-Z0-9:.-]+)/play/(?P<stream>[0-9]+)\.(ts|m3u8)\?token=(?P<token>[a-zA-Z0-9+/=]+).*'
+        VAPI_EPG_PROMPT=(r'http://vapi.vaders.tv/epg/channels?username=%(USER)s&password=%(PWD)s&'
+                          'action=get_live_streams&start=99990000000000')
+        VAPI_CAT_PROMPT=r'http://vapi.vaders.tv/epg/categories?username=%(USER)s&password=%(PWD)s'
+        VAPI_CAT_EPG=(r'http://vapi.vaders.tv/epg/channels?username=%(USER)s&password=%(PWD)s&'
+                       'category_id=%(CAT)s&action=get_live_streams&start=99990000000000')
+        XTS_RE=r'.*//(?P<host>[%a-zA-Z0-9:.-]+)(/live){0,1}/(?P<user>[^/]+)/(?P<pwd>[^/]+)/(?P<stream>[0-9]+).*'
+        XAPI_EPG_PROMPT=(r'http://%(HOST)s/player_api.php?username=%(USER)s&password=%(PWD)s&'
+                          'action=get_live_streams&start=99990000000000')
+        stream_url = ''
+        for cat_data in dictchannels.itervalues():
+            for data in cat_data:
+                stream_url = data.get('stream-url')
+                is_vod = data.get('is-vod')
+                if stream_url and not is_vod:
+                    break
+            if stream_url:
+                break
+        if not stream_url:
+            print 'No channel in dictchannels!'
+            return
+        vapi = re.compile(VTS_RE)
+        xapi = re.compile(XTS_RE)
+        name = 'name'
+        vaders = False
+        m = xapi.search(stream_url)
+        data = []
+        if m:
+            data = getJsonURL(XAPI_EPG_PROMPT % {'HOST': m.group('host'), 'USER': username, 'PWD': password})
+        else:
+            m = vapi.search(stream_url)
+            if m:
+                name = 'stream_display_name'
+                data = getJsonURL(VAPI_EPG_PROMPT % {'USER': username, 'PWD': password})
+                if not data:
+                    categories = getJsonURL(VAPI_CAT_PROMPT % {'USER': username, 'PWD': password})
+                    for cat in categories.iterkeys():
+                        data.extend(getJsonURL(VAPI_CAT_EPG % {'USER': username, 'PWD': password, 'CAT': str(cat)}))
+        if not data:
+            print 'No EPG prompt data!'
+            return
+        streams = []
+        for stream in data:
+            if stream['tv_archive_duration']:
+                sdn = stream[name]
+                sdn.rstrip()
+                streams.append(sdn)
+        streams = set(streams)
+        for cat, cat_data in dictchannels.iteritems():
+            for data in cat_data:
+                if data.get('stream-name') in streams:
+                    data['stream-name'] = data.get('stream-name')+BANG
+                    nameOverride = data.get('nameOverride')
+                    if nameOverride:
+                        data['nameOverride'] = nameOverride+BANG
+        return
+''' End of oottppxx Added Items '''
 
 
 def get_category_title(cat, category_options):
@@ -548,7 +633,7 @@ class Provider:
                                 x['nameOverride'] = override_channel.attrib.get('nameOverride', '')
                                 x['categoryOverride'] = override_channel.attrib.get('categoryOverride', '')
                                 # default to current values if attribute doesn't exist
-                                x['tvg-id'] = override_channel.attrib.get('tvg-name', x['tvg-name'])
+                                x['tvg-id'] = override_channel.attrib.get('tvg-id', x['tvg-id'])
                                 if override_channel.attrib.get('serviceRef', None) and self.config.sref_override:
                                     x['serviceRef'] = override_channel.attrib.get('serviceRef', x['serviceRef'])
                                     x['serviceRefOverride'] = True
@@ -801,6 +886,17 @@ class Provider:
             self.parse_map_xmltvsources_xml()
             # save xml mapping - should be after m3u parsing
             self.save_map_xml()
+            # Bang Bang Bang
+            username = self.config.username
+            password = self.config.password
+            dictchannels = self._dictchannels
+            ''' Begining oottppxx Added Items '''
+            if (True):
+                try:
+                    bang_catchup_names(self, dictchannels, username, password)
+                except Exception as e:
+                    print ('Ooopsie, something happened while trying to bang catchup names: '+ str(e))
+            ''' End of oottppxx Added Items '''
 
             # Download picons
             if self.config.picons:
@@ -1625,6 +1721,10 @@ USAGE
             print('**************************************\n')
             args_provider = Provider(args_config)
             args_provider.process_provider()
+            #### Stingray modification so users can get reload and end message if using command line (https://github.com/su1s/e2m3u2bouquet/issues/84) ###
+            reload_bouquets()
+            display_end_msg()
+            #### End of modification ###
         else:
             print('\n********************************')
             print('E2m3u2bouquet - Config based setup')
