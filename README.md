@@ -27,7 +27,7 @@ wget 'https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/e2
 Answer the questions and it will generate your config file
 
 ## e2m3u2bouquet oottppxx modification (V0.8.2) - For use with Heinz
-A script to associate all catchup channels with a bang !!! depreciated by oottppxx at Version 0.7.7 Modfied by Myself to work with the new way of working with e2m3u and suls script, I have suggested this is incoperated in SULS e2m3ubouquets and Dougie has said they will look at it in the next major rewrite which will use the API untill then I will try and keep this uptodate as best as I can.
+A script to associate all catchup channels with a bang !!! depreciated by oottppxx at Version 0.7.7 Modfied by stingray82 to work with the new structure of e2m3ubouquets.
 
 This is designed to identify catchup channels for use with ootppxx Heinz Plugin. https://github.com/oottppxx/enigma2/tree/master/plugins/heinz
 
