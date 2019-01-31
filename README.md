@@ -36,3 +36,23 @@ wget 'https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/e2
 
 #### Installation (Assuming Script Only) - Will require you to mannually update the path
 wget 'https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/e2m3u2bouquet-bang.py' -O 'Path to File/e2m3u2bouquet.py'
+
+## Example of using e2m3ubouquets to generate CCTV Bouquets on Enigma2 Receivers using RTSP
+Host it using free web hosting to generate your CCTV bouquets or even your lan storage server anywhere you can host a website
+Contains a Picon that can be used an example M3U to upload.
+
+**Given the fact it should have no effect on anyone I have asked that this modification is added to e2m3ubouquets and if accepted it will be depricated but the example m3u will stay as will the picon.**
+
+#### Installation (Assuming you have the Suls Plugin Installed) - Run in Terminal or Putty
+wget 'https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/e2m3u2bouquet-rtsp.py' -O '/usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet/e2m3u2bouquet.py' && rm /usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet/e2m3u2bouquet.pyo && wget -O /dev/null -q http://127.0.0.1/web/powerstate?newstate=3
+
+#### Installation (Assuming Script Only) - Will require you to mannually update the path
+wget 'https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/e2m3u2bouquet-rtsp.py' -O 'Path to File/e2m3u2bouquet.py'
+
+
+
+
+
+
+
+

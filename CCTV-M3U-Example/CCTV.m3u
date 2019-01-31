@@ -1,7 +1,7 @@
 EXTM3U
-#EXTINF:-1 tvg-id="Location" tvg-name="Location" tvg-logo="https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/CCTV-M3U-Example/Security-Camera-icon.png" group-title="CCTV",Location
+#EXTINF:-1 tvg-id="Location1" tvg-name="Location1" tvg-logo="http://Location2Picon.site/Security-Camera-icon.png" group-title="CCTV",Location1
 rtsp://user:password@LocalIP:Port/Streaming/Channels/202
-#EXTINF:-1 tvg-id="Location" tvg-name="Location" tvg-logo="https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/CCTV-M3U-Example/Security-Camera-icon.png" group-title="CCTV",Location
+#EXTINF:-1 tvg-id="Location2" tvg-name="Location2" tvg-logo="http://Location2Picon.site/Security-Camera-icon.png" group-title="CCTV",Location2
 rtsp://user:password@LocalIP:Port/Streaming/Channels/302
-#EXTINF:-1 tvg-id="Location" tvg-name="Location" tvg-logo="https://raw.githubusercontent.com/stingray82/e2m3u2bouquet-tools/master/CCTV-M3U-Example/Security-Camera-icon.png" group-title="CCTV",Location 
+#EXTINF:-1 tvg-id="Location2" tvg-name="Location2" tvg-logo="http://Location2Picon.site/Security-Camera-icon.png" group-title="CCTV",Location3
 rtsp://password:password@LocalIP:Port/Streaming/Channels/402
