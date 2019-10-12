@@ -1,6 +1,8 @@
 # e2m3u2bouquet-tools
 A set of tools for e2m3u2bouquet:
 
+These tools have been retired please feel free to continue to use them the loss XCpanel means the bangs are no longer needed and Douggiemac has accepted the RTSP edit as a suggestion in e2m3u so no longer needed here, I will leave the code for people to see and maybe learn from but will not be updating this unless I have any more tools to add.
+
 ## e2m3u2bouquet (tvg-name) rather than tvg-id
 Useful if your provider isn't a big supporter of Engima2 and uses the tvg-name tag for channel names rather than tvg-id
 
